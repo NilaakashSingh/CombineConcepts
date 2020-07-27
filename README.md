@@ -44,3 +44,14 @@ This repo covers the topics in combine listed below
 - Merge
 - CombineLatest
 - Zip
+
+#### Sequence Operators
+- Min and Max
+- Output
+- Count
+- Contains
+- AllSatisfy
+- Reduce
+
+#### Networking with Combine
+

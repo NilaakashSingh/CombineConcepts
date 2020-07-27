@@ -328,3 +328,81 @@ func zip() {
 }
 
 /*********************** Sequence Operators ***********************/
+
+// MARK: - Sequence Operators
+/// Min and Max
+func minMax() {
+    let publisher = [1, 2, 4, -90, -89, 90, 100].publisher
+    publisher.min().sink(receiveValue: { print($0) })
+    publisher.max().sink(receiveValue: { print($0) } )
+}
+
+/// First and last is also part of sequence operator, however i feel it is same as first and last on line 196
+
+/// Output
+func output() {
+    let publisher = ["10", "20", "70", "80", "30"].publisher
+    publisher.output(at: 3).sink(receiveValue: { print($0) })
+    publisher.output(in: (0...2)).sink(receiveValue: { print($0) })
+}
+
+/// Count
+func count() {
+    let publisher = ["10", "20", "70", "80", "30"].publisher
+    publisher.count().sink(receiveValue: { print($0) })
+    
+    let publisher1 = PassthroughSubject<Int, Never>()
+    publisher1.count().sink(receiveValue: { print($0) })
+    publisher1.send(10)
+    publisher1.send(20)
+    publisher1.send(40)
+    publisher1.send(completion: .finished) // If we dont tell publisher that sending is finished than count will not work
+}
+
+/// Contains
+func contains() {
+    let publisher = ["10", "20", "70", "80", "30"].publisher
+    publisher.contains("70").sink(receiveValue: { print($0) })
+}
+
+/// All Satisfy
+func allSatisfy() {
+    let publisher = [10, 20, 70, 80, 30].publisher
+    publisher.allSatisfy{ $0 % 2 == 0 }.sink(receiveValue: { print($0) })
+}
+
+/// Reduce
+func reduce() {
+    let publisher = [10, 20, 70, 80, 30].publisher
+    publisher.reduce(0) { (accumulator, value) in
+        return accumulator + value
+    }.sink(receiveValue: { print($0) })
+}
+
+/*********************** Networking with Combine ***********************/
+
+// MARK: - Networking with combine
+
+struct Post: Codable {
+    let title: String
+    let body: String
+}
+
+func getPosts() -> AnyPublisher<[Post], Error> {
+    guard let url = URL(string: "https://jsonplaceholder.typicode.com/posts") else {
+        fatalError("Invalid URL")
+    }
+    return URLSession.shared.dataTaskPublisher(for: url)
+        .map { $0.data }
+        .decode(type: [Post].self, decoder: JSONDecoder())
+        .eraseToAnyPublisher()
+}
+
+/*********************** Debugging combine ***********************/
+
+func print() {
+    let numbers = (1...10).publisher
+    numbers
+        .print("Debugging") /// Combine print publisher
+        .sink(receiveValue: { print($0) })
+}
