@@ -36,3 +36,11 @@ This repo covers the topics in combine listed below
 - First and Last
 - Drop First, Drop While, Drop Until Output From
 - Prefix
+
+#### Combine Operators
+- Prepend
+- Append
+- SwitchToLatest
+- Merge
+- CombineLatest
+- Zip

@@ -250,5 +250,81 @@ func prefix() {
 // MARK: - Combining Operators
 /// Prepend
 func prepend() {
+    let numbers = (7...10).publisher
+    let negativeNumbers = (-10...0).publisher
     
+    numbers
+        .prepend([5,6])
+        .prepend(2...4)
+        .prepend(1)
+        .prepend(negativeNumbers)
+        .sink { print($0) }
 }
+
+/// Append()
+func append() {
+    let numbers = [-10,-9].publisher
+    let negativeNumbers = (-8...0).publisher
+    
+    numbers
+        .append(negativeNumbers)
+        .append(1)
+        .append(2...8)
+        .append([9,10])
+        .sink { print($0) }
+}
+
+/// Switch to latest
+func switchToLatest() {
+    let publisher1 = PassthroughSubject<String, Never>()
+    let publisher2 = PassthroughSubject<String, Never>()
+    let publishers = PassthroughSubject<PassthroughSubject<String, Never>,Never>()
+    publishers.switchToLatest().sink { print($0) }
+
+    publishers.send(publisher1)
+    publisher1.send("Publisher 1 - Value 1")
+    publisher1.send("Publisher 1 - Value 2")
+
+    publishers.send(publisher2) // switching to publisher 2
+    publisher2.send("Publisher 2 - Value 1")
+    publisher1.send("Publisher 1 - Value 3")
+}
+
+/// Merge
+func merge() {
+    let publisher1 = PassthroughSubject<Int, Never>()
+    let publisher2 = PassthroughSubject<Int, Never>()
+    publisher1
+        .merge(with: publisher2)
+        .sink(receiveValue: { print($0) })
+    publisher1.send(20)
+    publisher2.send(30)
+}
+
+/// CombineLatest
+func combineLatest() {
+    let publisher1 = PassthroughSubject<Int, Never>()
+    let publisher2 = PassthroughSubject<String, Never>()
+    publisher1.combineLatest(publisher2).sink {
+        print("Publisher 1 value is \($0) and Publisher 2 value is \($1)")
+    }
+    publisher1.send(1)
+    publisher2.send("One")
+    publisher1.send(2)
+    publisher2.send("Two")
+}
+
+/// Zip
+func zip() {
+    let publisher1 = PassthroughSubject<Int, Never>()
+    let publisher2 = PassthroughSubject<String, Never>()
+    publisher1.zip(publisher2).sink {
+        print("Publisher 1 value is \($0) and Publisher 2 value is \($1)")
+    }
+    publisher1.send(1)
+    publisher2.send("One")
+    publisher1.send(2)
+    publisher2.send("Two")
+}
+
+/*********************** Sequence Operators ***********************/
