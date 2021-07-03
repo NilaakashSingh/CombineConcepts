@@ -53,5 +53,4 @@ This repo covers the topics in combine listed below
 - AllSatisfy
 - Reduce
 
-#### Networking with Combine
 
